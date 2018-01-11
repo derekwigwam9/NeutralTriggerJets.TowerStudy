@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job simulateSubmission="false" fileListSyntax="paths">
+
+  <command>
+    cd /star/u/dmawxc/PDSF/TowerStudy/
+    starver pro
+    ./DataTowerStudy_hot.sh
+  </command>
+
+  <ResourceUsage>
+    <Times>
+      <MaxWallTime>12</MaxWallTime>
+    </Times>
+    <StorageSpace>
+      <MinStorage>2</MinStorage>
+    </StorageSpace>
+  </ResourceUsage>
+
+  <stdout URL="file:/star/u/dmawxc/PDSF/TowerStudy/data.trgVsClustEtaAndPtCut.out"/>
+  <stderr URL="file:/star/u/dmawxc/PDSF/TowerStudy/data.trgVsClustEtaAndPtCut.err"/>
+
+</job>
