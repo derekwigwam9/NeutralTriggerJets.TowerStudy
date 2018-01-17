@@ -26,10 +26,9 @@
 
 using namespace std;
 
-static const UInt_t fScale(5);
-static const UInt_t nDist(8);
+static const UInt_t nDist(7);
 static const UInt_t nHist(nDist + 1);
-static const UInt_t nTotal(11);
+static const UInt_t nTotal(10);
 
 
 
@@ -40,28 +39,27 @@ void PlotScaledDistributions2D() {
 
 
   // i/o parameters
-  const TString sOutput("dataXembedding.hotTwrPhiVsEta.fromTwrLoop.d22m10y2017.root");
-  //const TString sInput[nHist] = {"pp200r12pt2.trgEtaVsClustAndPtCut.root", "pp200r12pt3.trgEtaVsClustAndPtCut.root", "pp200r12pt4.trgEtaVsClustAndPtCut.root", "pp200r12pt5.trgEtaVsClustAndPtCut.root", "pp200r12pt7.trgEtaVsClustAndPtCut.root", "pp200r12pt9.trgEtaVsClustAndPtCut.root", "pp200r12pt11.trgEtaVsClustAndPtCut.root", "pp200r12pt15.trgEtaVsClustAndPtCut.root", "pp200r12pt20.trgEtaVsClustAndPtCut.root", "pp200r12pt25.trgEtaVsClustAndPtCut.root", "pp200r12pt35.trgEtaVsClustAndPtCut.root", "pp200r9.trgEtaVsClustAndPtCut.root"};
-  const TString sInput[nHist] = {"pp200r12pt5.hotTwrEtaPhiCheck.d19m10y2017.root", "pp200r12pt7.hotTwrEtaPhiCheck.d19m10y2017.root", "pp200r12pt9.hotTwrEtaPhiCheck.d19m10y2017.root", "pp200r12pt11.hotTwrEtaPhiCheck.d19m10y2017.root", "pp200r12pt15.hotTwrEtaPhiCheck.d19m10y2017.root", "pp200r12pt20.hotTwrEtaPhiCheck.d19m10y2017.root", "pp200r12pt25.hotTwrEtaPhiCheck.d19m10y2017.root", "pp200r12pt35.hotTwrEtaPhiCheck.d19m10y2017.root", "pp200r9.hotTwrEtaPhiCheck.d19m10y2017.root"};
+  const TString sOutput("dEdX.dataXembed.weighted.d16m1y2018.root");
+  //const TString sInput[nHist] = {"pp200r9pt5u.et9vz55track.root", "pp200r9pt7u.et9vz55track.root", "pp200r9pt9u.et9vz55track.root", "pp200r9pt11u.et9vz55track.root", "pp200r9pt15u.et9vz55track.root", "pp200r9pt25u.et9vz55track.root", "pp200r9pt35u.et9vz55track.root", "pp200r9.et9vz55pi0.root"};
+  const TString sInput[nHist] = {"pp200r9pt5u.dedx.root", "pp200r9pt7u.dedx.root", "pp200r9pt9u.dedx.root", "pp200r9pt11u.dedx.root", "pp200r9pt15u.dedx.root", "pp200r9pt25u.dedx.root", "pp200r9pt35u.dedx.root", "pp200r9.dedx.root"};
 
   // histogram parameters
-  //const TString sHist[nHist] = {"hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA", "hTrkPhiVsEta_afterQA"};
-  const TString sHist[nHist] = {"hHotTwrPhiVsEta", "hHotTwrPhiVsEta", "hHotTwrPhiVsEta", "hHotTwrPhiVsEta", "hHotTwrPhiVsEta", "hHotTwrPhiVsEta", "hHotTwrPhiVsEta", "hHotTwrPhiVsEta", "hHotTwrPhiVsEta"};
-  const TString sTitleD("Hot tower #varphi vs. #eta (from tower loop), data");
-  const TString sTitleS("Hot tower #varphi vs. #eta (from tower loop), embedding");
-  const TString sTitleX("#eta^{twr}");
-  const TString sTitleY("#varphi^{twr}");
+  //const TString sHist[nHist] = {"Tower2D/hTwrPhiVsEta", "Tower2D/hTwrPhiVsEta", "Tower2D/hTwrPhiVsEta", "Tower2D/hTwrPhiVsEta", "Tower2D/hTwrPhiVsEta", "Tower2D/hTwrPhiVsEta", "Tower2D/hTwrPhiVsEta", "Tower2D/hTwrPhiVsEta"};
+  const TString sHist[nHist] = {"hTrkDeDxVsP_afterQA", "hTrkDeDxVsP_afterQA", "hTrkDeDxVsP_afterQA", "hTrkDeDxVsP_afterQA", "hTrkDeDxVsP_afterQA", "hTrkDeDxVsP_afterQA", "hTrkDeDxVsP_afterQA", "hTrkDeDxVsP_afterQA"};
+  const TString sTitleD("Track dE/dx vs. p^{trk}, data");
+  const TString sTitleS("Track dE/dx vs. p^{trk}, embedding");
+  const TString sTitleX("p^{trk}");
+  const TString sTitleY("dE/dx [KeV/cm]");
 
   // scales and misc. parameters
-  const Double_t fudge[nTotal]    = {1.228, 1.051, 1.014, 1., 1., 1., 1., 1., 1., 1., 1.};
-  const Double_t xSctn[nTotal]    = {9.005805, 1.461907, 0.3544354, 0.1513760, 2.488644e-02, 5.845846e-03, 2.304880e-03, 3.426618e-04, 4.562988e-05, 9.738044e-06, 5.019977e-07};
-  const Double_t nEvts[nTotal]    = {2100295., 600300., 600300., 300289., 300289., 300289., 160295., 100302., 80293., 76303., 23307.};
-  //const Double_t nTrgEmbed[nDist] = {2048499., 597244., 597636., 298445., 299014., 299789., 160014., 100135., 80040., 76190., 23200.};
-  const Double_t nTrgEmbed[nDist] = {0., 2., 39., 161., 660., 1954., 4926., 3710.};
-  //const Double_t dataNorm(1429435.);
-  const Double_t dataNorm(20700.);
+  const Double_t weights[nTotal]  = {1.0, 3.501425e-01, 1.395103e-01, 1.326444e-01, 2.801546e-02, 1.031377e-02, 8.210314e-03, 1.985107e-03, 8.054588e-05, 1.449037e-05};
+  //const Double_t nTrgEmbed[nDist] = {10., 89., 468., 1495., 6800., 19287., 9099.};
+  const Double_t nTrgEmbed[nDist] = {72937., 138140., 158352., 119083., 115052., 88558., 27347.};
+  //const Double_t dataNorm(20700.);
+  const Double_t dataNorm(1429435);
   const Double_t embedNorm(-1.);
-  const Bool_t   doNorm(true);
+  const Bool_t   doNorm(false);
+  const Bool_t   doIntNorm(true);
   const Bool_t   doRebin(false);
   const UInt_t   nRebin(5);
 
@@ -116,39 +114,11 @@ void PlotScaledDistributions2D() {
   }
   cout << "    Histograms grabbed." << endl;
 
-  // calculate scale set 5
-  Double_t scales5[nDist];
-  UInt_t   iStart = nTotal - nDist;
-  for (UInt_t iDist = iStart; iDist < nTotal; iDist++) {
-    const Double_t binLumi   = nEvts[iDist] / xSctn[iDist];
-    const Double_t binWeight = 1. / (fudge[iDist] * binLumi);
-    scales5[iDist - iStart]  = binWeight;
-  }
-
-  // select scales
-  Double_t *scales;
-  switch (fScale) {
-    case 1:
-      scales = scales1;
-      break;
-    case 2:
-      scales = scales2;
-      break;
-    case 3:
-      scales = scales3;
-      break;
-    case 4:
-      scales = scales4;
-      break;
-    case 5:
-      scales = scales5;
-      break;
-  }
 
   // norm check
   Double_t normer = 1.;
   if (doNorm) {
-    TFile *fNormer = new TFile("output/scaleFactors.eTtrg.hotTowerCheck3.d16m10y2017.root", "read");
+    TFile *fNormer = new TFile("output/eTtrg.pi0vsPiChrg.weighted.d15m1y2018.root", "read");
     TH1D  *hEmbedN = (TH1D*) fNormer -> Get("hSumUnormalized");
     TH1D  *hDataN  = (TH1D*) fNormer -> Get("hData");
 
@@ -164,11 +134,11 @@ void PlotScaledDistributions2D() {
   Double_t nTrgScale[nDist];
   for (UInt_t iHist = 0; iHist < nDist; iHist++) {
     if (iHist < nDist) {
-      hHist[iHist] -> Scale(scales[iHist]);
-      hNorm[iHist] -> Scale(scales[iHist]);
+      hHist[iHist] -> Scale(weights[(nTotal - nDist) + iHist]);
+      hNorm[iHist] -> Scale(weights[(nTotal - nDist) + iHist]);
       hHist[iHist] -> Scale(normer);
       hNorm[iHist] -> Scale(normer);
-      nTrgScale[iHist]  = nTrgEmbed[iHist] * scales[iHist] * normer;
+      nTrgScale[iHist]  = nTrgEmbed[iHist] * weights[(nTotal - nDist) + iHist] * normer;
       nTrgTotal        += nTrgScale[iHist];
     }
   }
@@ -210,10 +180,12 @@ void PlotScaledDistributions2D() {
   cout << "    Histograms summed." << endl;
 
   // quick fix
-  const Double_t dIntN = hNorm[nDist] -> Integral();
-  const Double_t eIntN = hSumN        -> Integral();
-  hNorm[nDist] -> Scale(1. / dIntN);
-  hSumN        -> Scale(1. / eIntN);
+  const Double_t intDataN = hNorm[nDist] -> Integral();
+  const Double_t intEmbdN = hSumN        -> Integral();
+  if (doIntNorm) {
+    hNorm[nDist] -> Scale(1. / intDataN);
+    hSumN        -> Scale(1. / intEmbdN);
+  }
 
 
   // set styles

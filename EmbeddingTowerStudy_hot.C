@@ -28,8 +28,8 @@ static const UInt_t nTwrMax(10000);
 static const UInt_t nMatMax(100);
 // io parameters
 static const TString sTree("GfmtoDst_mu");
-static const TString sInDefault("/star/data01/pwg/dmawxc/JetReco_pp/FullJetTree/embedding/pt5_-1.ePcalc2.root");
-static const TString sOutDefault("pp200r12pt5g.trgVsClustEta.root");
+static const TString sInDefault("/star/data01/pwg/dmawxc/JetReco_pp/FullJetTree/run9embedding/pt9.match.root");
+static const TString sOutDefault("pp200r9pt9u.dedx.root");
 
 
 
@@ -407,9 +407,9 @@ void EmbeddingTowerStudy_hot(const Bool_t isInBatchMode=false, const TString sIn
 
   const UInt_t   nId = 4802;
   const UInt_t   nDx = 1000;
-  const UInt_t   nV  = 2000;
-  const UInt_t   nE  = 2000;
-  const UInt_t   nP  = 1000;
+  const UInt_t   nV  = 4000;
+  const UInt_t   nE  = 400;
+  const UInt_t   nP  = 200;
   const UInt_t   nPx = 5000;
   const UInt_t   nH  = 80;
   const UInt_t   nF  = 120;
