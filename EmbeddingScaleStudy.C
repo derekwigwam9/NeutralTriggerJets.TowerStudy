@@ -1,12 +1,9 @@
 // 'EmbeddingScaleStudy.C'
 // Derek Anderson
-// 09.07.2017 (v3)
+// 01.15.2018 (v4)
 // 
-// This takes a set histograms, and
-// using a set of known fudge factors,
-// x-sections, and no. of events scale
-// each histogram accordingly and sum
-// them.
+// This takes a set histograms and scales
+// and sums their accordingly.
 //
 // NOTE: don't forget to change the io-
 // parameters!
@@ -27,14 +24,11 @@ using namespace std;
 
 
 // global constants
-static const UInt_t nBins(8);
+static const UInt_t nBins(7);
 static const UInt_t nHist(nBins + 1);
-static const UInt_t nTotal(11);
-// scales
-static const Double_t fudge[nTotal] = {1.228, 1.051, 1.014, 1., 1., 1., 1., 1., 1., 1., 1.};
-static const Double_t xSctn[nTotal] = {9.005805, 1.461907, 0.3544354, 0.1513760, 2.488644e-02, 5.845846e-03, 2.304880e-03, 3.426618e-04, 4.562988e-05, 9.738044e-06, 5.019977e-07};
-static const Double_t nEvts[nTotal] = {2100295., 600300., 600300., 300289., 300289., 300289., 160295., 100302., 80293., 76303., 23307.};
-
+static const UInt_t nTotal(10);
+// weights
+static const Double_t weights[nTotal] = {1.0, 3.501425e-01, 1.395103e-01, 1.326444e-01, 2.801546e-02, 1.031377e-02, 8.210314e-03, 1.985107e-03, 8.054588e-05, 1.449037e-05};
 
 
 void EmbeddingScaleStudy() {
@@ -44,14 +38,14 @@ void EmbeddingScaleStudy() {
 
 
   // io-parameters
-  const TString sInput("dataXembedding.eTtrg.thirdJetMaker.allFiles.d2m11y2017.root");
-  const TString sOutput("scaleFactors.eTtrg.thirdJetMaker.allFiles.d2m11y2017.root");
-  const TString sHist[nHist]     = {"hTrgEt_pt57", "hTrgEt_pt79", "hTrgEt_pt911", "hTrgEt_pt1115", "hTrgEt_pt1520", "hTrgEt_pt2025", "hTrgEt_pt2535", "hTrgEt_pt35", "hTrgEt_data"};
-  const TString sBins[nBins]     = {"(5,7)", "(7,9)", "(9,11)", "(11,15)", "(15,20)", "(20,25)", "(25,35)", "(35,-1)"};
-  const TString sLegs[nHist + 1] = {"p_{T}^{part}#in(5,7)", "p_{T}^{part}#in(7,9)", "p_{T}^{part}#in(9,11)", "p_{T}^{part}#in(11,15)", "p_{T}^{part}#in(15,20)", "p_{T}^{part}#in(20,25)", "p_{T}^{part}#in(25,35)", "p_{T}^{part}#in(35,-1)", "sum", "data"};
-  const TString sTitle("Trigger E_{T}");
-  const TString sXtitle("E_{T}^{trg}");
-  const TString sYtitle("dN^{trg}/dE_{T}^{trg}");
+  const TString sInput("etaPhysTrg.pi0vsPiChrg.d15m1y2018.root");
+  const TString sOutput("etaPhysTrg.pi0vsPiChrg.weighted.d15m1y2018.root");
+  const TString sHist[nHist]     = {"hPhysEta_pt57", "hPhysEta_pt79", "hPhysEta_pt911", "hPhysEta_pt1115", "hPhysEta_pt1525", "hPhysEta_pt2535", "hPhysEta_pt35", "hPhysEta_data"};
+  const TString sBins[nBins]     = {"(5,7)", "(7,9)", "(9,11)", "(11,15)", "(15,25)", "(25,35)", "(35,-1)"};
+  const TString sLegs[nHist + 1] = {"p_{T}^{part}#in(5,7)", "p_{T}^{part}#in(7,9)", "p_{T}^{part}#in(9,11)", "p_{T}^{part}#in(11,15)", "p_{T}^{part}#in(15,25)", "p_{T}^{part}#in(25,35)", "p_{T}^{part}#in(35,-1)", "sum", "data"};
+  const TString sTitle("Trigger #eta (physics)");
+  const TString sXtitle("#eta^{trg}");
+  const TString sYtitle("dN^{trg}/d#eta^{trg}");
   const TString sYtitleR("embedding / data");
 
   // constants
@@ -67,14 +61,14 @@ void EmbeddingScaleStudy() {
   const UInt_t  fStyLne(2);
   const UInt_t  fGrid(0);
   const UInt_t  fLog(0);
-  const UInt_t  fCol[nHist + 1] = {810, 800, 830, 850, 870, 860, 890, 880, 910, 1};
-  const UInt_t  fMar[nHist + 1] = {7, 24, 26, 32, 27, 25, 28, 30, 24, 7};
-  const Bool_t  doRebin(true);
+  const UInt_t  fCol[nHist + 1] = {810, 800, 830, 850, 870, 860, 890, 880, 1};
+  const UInt_t  fMar[nHist + 1] = {7, 24, 26, 32, 27, 25, 28, 30, 7};
+  const Bool_t  doRebin(false);
   const Float_t fLbl(0.02);
   const Float_t fMargin(0.);
   const Float_t weight(1.);
-  const Float_t xRange[2] = {6., 20..};
-  const Float_t pRange[2] = {0., 25.};
+  const Float_t xRange[2] = {-1., 1.};
+  const Float_t pRange[2] = {-1., 1.};
   const Float_t xTxt[2]   = {0.1, 0.3};
   const Float_t xLeg[2]   = {0.3, 0.5};
   const Float_t yTxt[2]   = {0.1, 0.3};
@@ -118,19 +112,6 @@ void EmbeddingScaleStudy() {
     cout << "    Histograms rebinned." << endl;
   }
 
-
-  // calculate scales
-  Double_t weights[nBins];
-
-  const UInt_t iStart = nTotal - nBins;
-  for (UInt_t iBins = iStart; iBins < nTotal; iBins++) {
-    const Double_t binLumi   = nEvts[iBins] / xSctn[iBins];
-    const Double_t binWeight = 1. / (fudge[iBins] * binLumi);
-    weights[iBins - iStart]  = binWeight;
-  }
-  cout << "    Weights calculated." << endl;
-
-
   // sum histograms
   const UInt_t  nBinsX = hHist[nBins] -> GetNbinsX();
   const Float_t xBin0  = hHist[nBins] -> GetBinLowEdge(1);
@@ -141,8 +122,8 @@ void EmbeddingScaleStudy() {
   hSumU -> Sumw2();
   hSumN -> Sumw2();
   for (UInt_t iBins = 0; iBins < nBins; iBins++) {
-    hSumU -> Add(hHist[iBins], weights[iBins]);
-    hSumN -> Add(hHist[iBins], weights[iBins]);
+    hSumU -> Add(hHist[iBins], weights[(nTotal - nBins) + iBins]);
+    hSumN -> Add(hHist[iBins], weights[(nTotal - nBins) + iBins]);
   }
   cout << "    Histograms summed." << endl;
 
