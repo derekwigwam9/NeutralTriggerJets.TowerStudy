@@ -751,7 +751,8 @@ void EmbeddingTowerStudy_track(const Bool_t isInBatchMode=false, const TString s
         const Double_t pTwr   = TMath::Sqrt((pXtwr * pXtwr) + (pYtwr * pYtwr) + (pZtwr * pZtwr));
 
         // calculate projected eta
-        Double_t hProj  = TMath::Log(1. / (TMath::Tan(0.5 * TMath::ASin(pTtwr / pTwr))));
+        Double_t hProj = TMath::Log(1. / (TMath::Tan(0.5 * TMath::ASin(pTtwr / pTwr))));
+        Double_t fProj = TMath::ATan(pYtwr / pXtwr);
         if (pZtwr < 0.) hProj *= -1.;
 
         // hot tower check
@@ -785,11 +786,13 @@ void EmbeddingTowerStudy_track(const Bool_t isInBatchMode=false, const TString s
           hNumTrk          -> Fill(nTrks);
           hTrgEt           -> Fill(eTtwr);
           hTrgEne          -> Fill(eTwr);
+          hTrgPhi          -> Fill(fTwr);
           hTrgEta          -> Fill(hTwr);
           hProjEta         -> Fill(hProj);
+          hProjPhi         -> Fill(fProj);
           hTrgVsProjEta    -> Fill(hTwr, hProj);
           hTrgPhiVsEtaTwr  -> Fill(hTwr, fTwr);
-          hTrgPhiVsEtaProj -> Fill(hProj, fTwr);
+          hTrgPhiVsEtaProj -> Fill(hProj, fProj);
           break;
         }
 
