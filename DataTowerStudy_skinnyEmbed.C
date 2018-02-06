@@ -407,7 +407,9 @@ void DataTowerStudy_skinnyEmbed(const Bool_t isInBatchMode=false, const TString 
   TH1D *hTrgEt;
   TH1D *hTrgEne;
   TH1D *hTrgEta;
+  TH1D *hTrgPhi;
   TH1D *hClustEta;
+  TH1D *hClustPhi;
   TH1D *hTrgTsp;
   TH1D *hEffPt[nEffPar];
   TH2D *hTrgVsClustEta;
@@ -474,7 +476,9 @@ void DataTowerStudy_skinnyEmbed(const Bool_t isInBatchMode=false, const TString 
   hTrgEt            = new TH1D("hTrgEt", "Trigger E_{T}", nE, e[0], e[1]);
   hTrgEne           = new TH1D("hTrgEne", "Trigger energy", nE, e[0], e[1]);
   hTrgEta           = new TH1D("hTrgEta", "Trigger (tower) #eta", nH, h[0], h[1]);
+  hTrgPhi           = new TH1D("hTrgPhi", "Trigger (tower) #varphi", nF, f[0], f[1]);
   hClustEta         = new TH1D("hClustEta", "Trigger (cluster) #eta", nH, h[0], h[1]);
+  hClustPhi         = new TH1D("hClustPhi", "Trigger (cluster) #varphi", nF, f[0], f[1]);
   hTrgTsp           = new TH1D("hTrgTsp", "Trigger TSP", nS, s[0], s[1]);
   hEffPt[0]         = new TH1D("hPionPt", "#pi^{#pm} p_{T}", nE, e[0], e[1]);
   hEffPt[1]         = new TH1D("hKaonPt", "K^{#pm} p_{T}", nE, e[0], e[1]);
@@ -562,7 +566,9 @@ void DataTowerStudy_skinnyEmbed(const Bool_t isInBatchMode=false, const TString 
   hTrgEt            -> Sumw2();
   hTrgEne           -> Sumw2();
   hTrgEta           -> Sumw2();
+  hTrgPhi           -> Sumw2();
   hClustEta         -> Sumw2();
+  hClustPhi         -> Sumw2();
   hTrgTsp           -> Sumw2();
   hTrgVsClustEta    -> Sumw2();
   hTrgPhiVsEtaTwr   -> Sumw2();
@@ -705,7 +711,9 @@ void DataTowerStudy_skinnyEmbed(const Bool_t isInBatchMode=false, const TString 
         hTrgEt            -> Fill(eTtrg);
         hTrgEne           -> Fill(eTrg);
         hTrgEta           -> Fill(hTrg);
+        hTrgPhi           -> Fill(fTrg);
         hClustEta         -> Fill(hClust);
+        hClustPhi         -> Fill(fClust);
         hTrgTsp           -> Fill(tsp);
         hTrgVsClustEta    -> Fill(hTrg, hClust);
         hTrgPhiVsEtaTwr   -> Fill(hTrg, fClust);
@@ -729,8 +737,10 @@ void DataTowerStudy_skinnyEmbed(const Bool_t isInBatchMode=false, const TString 
 
         // tower info
         const Int_t    twrID  = TowerArray_TwrId[iTwr];
+        const Int_t    twrADC = TowerArray_TwrADC[iTwr];
         const UInt_t   fMatch = TowerArray_TwrMatchIdnex[iTwr];
         const UInt_t   nMatch = TowerArray_NoOfmatchedTrk[iTwr];
+        const Double_t pProj  = TowerArray_TwrMatchP[iTwr];
         const Double_t fTwr   = TowerArray_TwrPhi[iTwr];
         const Double_t hTwr   = TowerArray_TwrEta[iTwr];
         const Double_t eTwr   = TowerArray_TwrEng[iTwr];
@@ -738,6 +748,12 @@ void DataTowerStudy_skinnyEmbed(const Bool_t isInBatchMode=false, const TString 
         const Double_t pXtwr  = TowerArray_TwrPx[iTwr];
         const Double_t pYtwr  = TowerArray_TwrPy[iTwr];
         const Double_t pTtwr  = TMath::Sqrt((pXtwr * pXtwr) + (pYtwr * pYtwr));
+        const Double_t pTwr   = TMath::Sqrt((pXtwr * pXtwr) + (pYtwr * pYtwr) + (pZtwr * pZtwr));
+
+        // calculate projectd phi, eta
+        Double_t hClust = TMath::Log(1. / (TMath::Tan(0.5 * TMath::ASin(pTtwr / pTwr))));
+        Double_t fClust = TMath::ATan(pYtwr / pXtwr);
+        if (pZtwr < 0.) hClust *= -1.;
 
         // hot tower check
         if (removeHotTwrs) {
@@ -752,11 +768,13 @@ void DataTowerStudy_skinnyEmbed(const Bool_t isInBatchMode=false, const TString 
         }
 
         // tower cuts
-        const Bool_t isTriggerTwr  = (twrID == trgID);
-        const Bool_t isInEtaTwrCut = (TMath::Abs(hTwr) < hTwrMax);
-        const Bool_t isInEneTwrCut = (eTwr > eTwrMin);
-        const Bool_t isInEtTrgCut  = ((eTtwr > eTtrgMin) && (eTtwr < eTtrgMax));
-        if (!isInEtaTwrCut || !isInEneTwrCut || !isInEtTrgCut) continue;
+        const Bool_t isInAdcTrgCut  = (twrADC <= adcMax);
+        const Bool_t isInProjTrgCut = (pProj < pProjMax);
+        const Bool_t isTriggerTwr   = (twrID == trgID);
+        const Bool_t isInEtaTwrCut  = (TMath::Abs(hTwr) < hTwrMax);
+        const Bool_t isInEneTwrCut  = (eTwr > eTwrMin);
+        const Bool_t isInEtTrgCut   = ((eTtwr > eTtrgMin) && (eTtwr < eTtrgMax));
+        if (!isInAdcTrgCut || !isInProjTrgCut || !isInEneTrgCut || !isInEtaTrgCut || !isInEtTrgCut) continue;
 
         // check if trigger
         if (isInEtTrgCut) {
@@ -765,9 +783,16 @@ void DataTowerStudy_skinnyEmbed(const Bool_t isInBatchMode=false, const TString 
           hTrig     = hTwr;
           foundTrg3 = true;
           numTrg++;
-          hTrgEt  -> Fill(eTtwr);
-          hTrgEne -> Fill(eTwr);
-          hTrgEta -> Fill(hTwr);
+          hNumTrk           -> Fill(nTrks);
+          hTrgEt            -> Fill(eTtwr);
+          hTrgEne           -> Fill(eTwr);
+          hTrgEta           -> Fill(hTwr);
+          hTrgPhi           -> Fill(fTwr);
+          hClustEta         -> Fill(hClust);
+          hClustPhi         -> Fill(fClust);
+          hTrgVsClustEta    -> Fill(hTwr, hClust);
+          hTrgPhiVsEtaTwr   -> Fill(hTwr, fTwr);
+          hTrgPhiVsEtaClust -> Fill(hClust, fClust);
           break;
         }
 
@@ -1034,7 +1059,9 @@ void DataTowerStudy_skinnyEmbed(const Bool_t isInBatchMode=false, const TString 
   hTrgEt            -> Write();
   hTrgEne           -> Write();
   hTrgEta           -> Write();
+  hTrgPhi           -> Write();
   hClustEta         -> Write();
+  hClustPhi         -> Write();
   hTrgTsp           -> Write();
   hTrgVsClustEta    -> Write();
   hTrgPhiVsEtaTwr   -> Write();
