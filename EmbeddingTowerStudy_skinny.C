@@ -405,11 +405,13 @@ void EmbeddingTowerStudy_skinny(const Bool_t isInBatchMode=false, const TString 
   TH1D *hTrgEt;
   TH1D *hTrgEne;
   TH1D *hTrgEta;
-  TH1D *hProjEta;
+  TH1D *hTrgPhi;
+  TH1D *hClustEta;
+  TH1D *hClustPhi;
   TH1D *hEffPt[nEffPar];
-  TH2D *hTrgVsProjEta;
+  TH2D *hTrgVsClustEta;
   TH2D *hTrgPhiVsEtaTwr;
-  TH2D *hTrgPhiVsEtaProj;
+  TH2D *hTrgPhiVsEtaClust;
   TH2D *hHotTrgPhiVsEta;
   TH2D *hHotTwrPhiVsEta;
   // track (triggered) histograms
@@ -462,22 +464,24 @@ void EmbeddingTowerStudy_skinny(const Bool_t isInBatchMode=false, const TString 
   const Double_t dF[2] = {-1. * TMath::TwoPi(), TMath::TwoPi()};
   const Double_t p[2]  = {0., 10.};
   // trigger histograms
-  hNumTrg          = new TH1D("hNumTrg", "No. of triggers", nN, n[0], n[1]);
-  hNumTrk          = new TH1D("hNumTrk", "No. of tracks", nN, n[0], n[1]);
-  hTrgEt           = new TH1D("hTrgEt", "Trigger E_{T}", nE, e[0], e[1]);
-  hTrgEne          = new TH1D("hTrgEne", "Trigger energy", nE, e[0], e[1]);
-  hTrgEta          = new TH1D("hTrgEta", "Trigger (tower) #eta", nH, h[0], h[1]);
-  hProjEta         = new TH1D("hProjEta", "Trigger (cluster) #eta", nH, h[0], h[1]);
-  hEffPt[0]        = new TH1D("hPionPt", "#pi^{#pm} p_{T}", nE, e[0], e[1]);
-  hEffPt[1]        = new TH1D("hKaonPt", "K^{#pm} p_{T}", nE, e[0], e[1]);
-  hEffPt[2]        = new TH1D("hProtonPt", "p^{#pm} p_{T}", nE, e[0], e[1]);
-  hEffPt[3]        = new TH1D("hElectronPt", "e^{#pm} p_{T}", nE, e[0], e[1]);
-  hEffPt[4]        = new TH1D("hTotalPt", "All particles p_{T}", nE, e[0], e[1]);
-  hTrgVsProjEta    = new TH2D("hTrgVsProjEta", "Trigger tower vs. cluster eta;#eta^{twr};#eta^{clust}", nH, h[0], h[1], nH, h[0], h[1]);
-  hTrgPhiVsEtaTwr  = new TH2D("hTrgPhiVsEtaTwr", "Trigger #varphi vs #eta_{twr}", nH ,h[0], h[1], nF, f[0], f[1]);
-  hTrgPhiVsEtaProj = new TH2D("hTrgPhiVsEtaProj", "Trigger #varphi vs #eta_{clust}", nH, h[0], h[1], nF, f[0], f[1]);
+  hNumTrg           = new TH1D("hNumTrg", "No. of triggers", nN, n[0], n[1]);
+  hNumTrk           = new TH1D("hNumTrk", "No. of tracks", nN, n[0], n[1]);
+  hTrgEt            = new TH1D("hTrgEt", "Trigger E_{T}", nE, e[0], e[1]);
+  hTrgEne           = new TH1D("hTrgEne", "Trigger energy", nE, e[0], e[1]);
+  hTrgEta           = new TH1D("hTrgEta", "Trigger (tower) #eta", nH, h[0], h[1]);
+  hTrgPhi           = new TH1D("hTrgPhi", "Trigger (tower) #varphi", nF, f[0], f[1]);
+  hClustEta         = new TH1D("hClustEta", "Trigger (cluster) #eta", nH, h[0], h[1]);
+  hClustPhi         = new TH1D("hClustPhi", "Trigger (cluster) #varphi", nF, f[0], f[1]);
+  hEffPt[0]         = new TH1D("hPionPt", "#pi^{#pm} p_{T}", nE, e[0], e[1]);
+  hEffPt[1]         = new TH1D("hKaonPt", "K^{#pm} p_{T}", nE, e[0], e[1]);
+  hEffPt[2]         = new TH1D("hProtonPt", "p^{#pm} p_{T}", nE, e[0], e[1]);
+  hEffPt[3]         = new TH1D("hElectronPt", "e^{#pm} p_{T}", nE, e[0], e[1]);
+  hEffPt[4]         = new TH1D("hTotalPt", "All particles p_{T}", nE, e[0], e[1]);
+  hTrgVsClustEta    = new TH2D("hTrgVsClustEta", "Trigger tower vs. cluster eta;#eta^{twr};#eta^{clust}", nH, h[0], h[1], nH, h[0], h[1]);
+  hTrgPhiVsEtaTwr   = new TH2D("hTrgPhiVsEtaTwr", "Trigger #varphi vs #eta_{twr}", nH ,h[0], h[1], nF, f[0], f[1]);
+  hTrgPhiVsEtaClust = new TH2D("hTrgPhiVsEtaClust", "Trigger #varphi vs #eta_{clust}", nH, h[0], h[1], nF, f[0], f[1]);
   hHotTrgPhiVsEta   = new TH2D("hHotTrgPhiVsEta", "Hot trigger #varphi vs. #eta", nH, h[0], h[1], nF, f[0], f[1]);
-  hHotTwrPhiVsEta  = new TH2D("hHotTwrPhiVsEta", "Hot tower #varphi vs. #eta", nH, h[0], h[1], nF, f[0], f[1]);
+  hHotTwrPhiVsEta   = new TH2D("hHotTwrPhiVsEta", "Hot tower #varphi vs. #eta", nH, h[0], h[1], nF, f[0], f[1]);
   // triggered track histograms
   hTrkEne[0]       = new TH1D("hTrkEneAll", "Track energy, all", nE, e[0], e[1]);
   hTrkEne[1]       = new TH1D("hTrkEneRec", "Track energy, recoil", nE, e[0], e[1]);
@@ -550,16 +554,18 @@ void EmbeddingTowerStudy_skinny(const Bool_t isInBatchMode=false, const TString 
   hTwrPe[3]        = new TH1D("hTwrPeNA", "Tower #sump/E, N_{match} > 0", nP, p[0], p[1]);
   hTwrNtrk         = new TH1D("hTwrNtrk", "No. of matched tracks", nN, n[0], n[1]);
   // errors
-  hNumTrk          -> Sumw2();
-  hTrgEt           -> Sumw2();
-  hTrgEne          -> Sumw2();
-  hTrgEta          -> Sumw2();
-  hProjEta         -> Sumw2();
-  hTrgVsProjEta    -> Sumw2();
-  hTrgPhiVsEtaTwr  -> Sumw2();
-  hTrgPhiVsEtaProj -> Sumw2();
-  hHotTrgPhiVsEta  -> Sumw2();
-  hHotTwrPhiVsEta  -> Sumw2();
+  hNumTrk           -> Sumw2();
+  hTrgEt            -> Sumw2();
+  hTrgEne           -> Sumw2();
+  hTrgEta           -> Sumw2();
+  hTrgPhi           -> Sumw2();
+  hClustEta         -> Sumw2();
+  hClustPhi         -> Sumw2();
+  hTrgVsClustEta    -> Sumw2();
+  hTrgPhiVsEtaTwr   -> Sumw2();
+  hTrgPhiVsEtaClust -> Sumw2();
+  hHotTrgPhiVsEta   -> Sumw2();
+  hHotTwrPhiVsEta   -> Sumw2();
   for (Long64_t iEffPar = 0; iEffPar < nEffPar; iEffPar++) {
     hEffPt[iEffPar] -> Sumw2();
   }
@@ -673,9 +679,10 @@ void EmbeddingTowerStudy_skinny(const Bool_t isInBatchMode=false, const TString 
         const Double_t pTtwr  = TMath::Sqrt((pXtwr * pXtwr) + (pYtwr * pYtwr));
         const Double_t pTwr   = TMath::Sqrt((pXtwr * pXtwr) + (pYtwr * pYtwr) + (pZtwr * pZtwr));
 
-        // calculate projected eta
-        Double_t hProj  = TMath::Log(1. / (TMath::Tan(0.5 * TMath::ASin(pTtwr / pTwr))));
-        if (pZtwr < 0.) hProj *= -1.;
+        // calculate projectd phi, eta
+        Double_t hClust = TMath::Log(1. / (TMath::Tan(0.5 * TMath::ASin(pTtwr / pTwr))));
+        Double_t fClust = TMath::ATan(pYtwr / pXtwr);
+        if (pZtwr < 0.) hClust *= -1.;
 
         // hot tower check
         Bool_t isHot = false;
@@ -705,14 +712,16 @@ void EmbeddingTowerStudy_skinny(const Bool_t isInBatchMode=false, const TString 
           hTrig     = hTwr;
           foundTrg3 = true;
           numTrg++;
-          hNumTrk          -> Fill(nTrks);
-          hTrgEt           -> Fill(eTtwr);
-          hTrgEne          -> Fill(eTwr);
-          hTrgEta          -> Fill(hTwr);
-          hProjEta         -> Fill(hProj);
-          hTrgVsProjEta    -> Fill(hTwr, hProj);
-          hTrgPhiVsEtaTwr  -> Fill(hTwr, fTwr);
-          hTrgPhiVsEtaProj -> Fill(hProj, fTwr);
+          hNumTrk           -> Fill(nTrks);
+          hTrgEt            -> Fill(eTtwr);
+          hTrgEne           -> Fill(eTwr);
+          hTrgEta           -> Fill(hTwr);
+          hTrgPhi           -> Fill(fTwr);
+          hClustEta         -> Fill(hClust);
+          hClustPhi         -> Fill(fClust);
+          hTrgVsClustEta    -> Fill(hTwr, hClust);
+          hTrgPhiVsEtaTwr   -> Fill(hTwr, fTwr);
+          hTrgPhiVsEtaClust -> Fill(hClust, fClust);
           break;
         }
 
@@ -962,18 +971,20 @@ void EmbeddingTowerStudy_skinny(const Bool_t isInBatchMode=false, const TString 
   cout << "    Directories made." << endl;
 
 
-  fOutput          -> cd();
-  hNumTrg          -> Write();
-  hNumTrk          -> Write();
-  hTrgEt           -> Write();
-  hTrgEne          -> Write();
-  hTrgEta          -> Write();
-  hProjEta         -> Write();
-  hTrgVsProjEta    -> Write();
-  hTrgPhiVsEtaTwr  -> Write();
-  hTrgPhiVsEtaProj -> Write();
-  hHotTrgPhiVsEta  -> Write();
-  hHotTwrPhiVsEta  -> Write();
+  fOutput           -> cd();
+  hNumTrg           -> Write();
+  hNumTrk           -> Write();
+  hTrgEt            -> Write();
+  hTrgEne           -> Write();
+  hTrgEta           -> Write();
+  hTrgPhi           -> Write();
+  hClustEta         -> Write();
+  hClustPhi         -> Write();
+  hTrgVsClustEta    -> Write();
+  hTrgPhiVsEtaTwr   -> Write();
+  hTrgPhiVsEtaClust -> Write();
+  hHotTrgPhiVsEta   -> Write();
+  hHotTwrPhiVsEta   -> Write();
   for (Long64_t iEffPar = 0; iEffPar < nEffPar; iEffPar++) {
     hEffPt[iEffPar] -> Write();
   }

@@ -405,7 +405,9 @@ void EmbeddingTowerStudy_track(const Bool_t isInBatchMode=false, const TString s
   TH1D *hTrgEt;
   TH1D *hTrgEne;
   TH1D *hTrgEta;
+  TH1D *hTrgPhi;
   TH1D *hProjEta;
+  TH1D *hProjPhi;
   TH1D *hEffPt[nEffPar];
   TH2D *hTrgVsProjEta;
   TH2D *hTrgPhiVsEtaTwr;
@@ -466,8 +468,10 @@ void EmbeddingTowerStudy_track(const Bool_t isInBatchMode=false, const TString s
   hNumTrk          = new TH1D("hNumTrk", "No. of tracks", nN, n[0], n[1]);
   hTrgEt           = new TH1D("hTrgEt", "Trigger E_{T}", nE, e[0], e[1]);
   hTrgEne          = new TH1D("hTrgEne", "Trigger energy", nE, e[0], e[1]);
-  hTrgEta          = new TH1D("hTrgEta", "Trigger (tower) #eta", nH, h[0], h[1]);
-  hProjEta         = new TH1D("hProjEta", "Trigger (cluster) #eta", nH, h[0], h[1]);
+  hTrgEta          = new TH1D("hTrgEta", "Trigger (detector) #eta", nH, h[0], h[1]);
+  hTrgPhi          = new TH1D("hTrgPhi", "Trigger (detector) #varphi", nF, f[0], f[1]);
+  hProjEta         = new TH1D("hProjEta", "Trigger (physics) #eta", nH, h[0], h[1]);
+  hProjPhi         = new TH1D("hProjPhi", "Trigger (physics) #varphi", nF, f[0], f[1]);
   hEffPt[0]        = new TH1D("hPionPt", "#pi^{#pm} p_{T}", nE, e[0], e[1]);
   hEffPt[1]        = new TH1D("hKaonPt", "K^{#pm} p_{T}", nE, e[0], e[1]);
   hEffPt[2]        = new TH1D("hProtonPt", "p^{#pm} p_{T}", nE, e[0], e[1]);
@@ -554,7 +558,9 @@ void EmbeddingTowerStudy_track(const Bool_t isInBatchMode=false, const TString s
   hTrgEt           -> Sumw2();
   hTrgEne          -> Sumw2();
   hTrgEta          -> Sumw2();
+  hTrgPhi          -> Sumw2();
   hProjEta         -> Sumw2();
+  hProjPhi         -> Sumw2();
   hTrgVsProjEta    -> Sumw2();
   hTrgPhiVsEtaTwr  -> Sumw2();
   hTrgPhiVsEtaProj -> Sumw2();
@@ -700,7 +706,9 @@ void EmbeddingTowerStudy_track(const Bool_t isInBatchMode=false, const TString s
           hTrgEt           -> Fill(pTtrk);
           hTrgEne          -> Fill(eTrk);
           hTrgEta          -> Fill(hTrk);
+          hTrgPhi          -> Fill(fTrk);
           hProjEta         -> Fill(hTrk);
+          hProjPhi         -> Fill(fTrk);
           hTrgVsProjEta    -> Fill(hTrk, hTrk);
           hTrgPhiVsEtaTwr  -> Fill(hTrk, fTrk);
           hTrgPhiVsEtaProj -> Fill(hTrk, fTrk);
@@ -1046,7 +1054,9 @@ void EmbeddingTowerStudy_track(const Bool_t isInBatchMode=false, const TString s
   hTrgEt           -> Write();
   hTrgEne          -> Write();
   hTrgEta          -> Write();
+  hTrgPhi          -> Write();
   hProjEta         -> Write();
+  hProjPhi         -> Write();
   hTrgVsProjEta    -> Write();
   hTrgPhiVsEtaTwr  -> Write();
   hTrgPhiVsEtaProj -> Write();
