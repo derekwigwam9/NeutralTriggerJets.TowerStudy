@@ -697,10 +697,6 @@ void DataTowerStudy_skinny(const Bool_t isInBatchMode=false, const TString sInpu
         }
       }  // end hot tower check
 
-      // TEST [02.23.2018]
-      const Bool_t isInBadPhiZone = ((fTrg > 1.25) && (fTrg < 1.58));
-      if (isInBadPhiZone) continue;
-
       const Bool_t isInAdcCut      = (adc <= adcMax);
       const Bool_t isInStrpCut     = ((eHstrp >= eHmin) && (eFstrp >= eFmin));
       const Bool_t isInProjCut     = (pProj < pProjMax);
