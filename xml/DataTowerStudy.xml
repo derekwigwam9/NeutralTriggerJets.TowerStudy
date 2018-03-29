@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job simulateSubmission="false" fileListSyntax="paths">
+
+  <command>
+    cd /global/project/projectdirs/star/pwg/starjetc/dmawxc/Ana_nutralTgr_Jet/JetData/
+    starver pro
+    root4star -b -q DataTowerStudy.C'(true,"/global/project/projectdirs/star/pwg/starjetc/dmawxc/Ana_nutralTgr_Jet/JetData/TowerResponseStudy/Run9/pp200r9.epCalc2.root","/global/project/projectdirs/star/pwg/starjetc/dmawxc/Ana_nutralTgr_Jet/JetData/test4.root")' > STOPGAP.log
+  </command>
+
+  <ResourceUsage>
+    <Times>
+      <MaxWallTime>3</MaxWallTime>
+    </Times>
+  </ResourceUsage>
+
+  <stdout URL="file:/global/project/projectdirs/star/pwg/starjetc/dmawxc/Ana_nutralTgr_Jet/JetData/test4.out"/>
+  <stderr URL="file:/global/project/projectdirs/star/pwg/starjetc/dmawxc/Ana_nutralTgr_Jet/JetData/test4.err"/>
+
+</job>
