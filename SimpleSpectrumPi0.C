@@ -58,6 +58,7 @@ void SimpleSpectrumPi0(const Bool_t isInBatchMode=false, const TString sInput=sI
   // tower constants
   const Double_t hTwrMax  = 0.9;
   const Double_t eTwrMin  = 0.2;
+  const Double_t pTtwrMin = 0.2;
 
   // hot towers
   const UInt_t hotTwrs[NHotTwr] = {1, 35, 141, 187, 224, 341, 424, 594, 814, 899, 900, 1046, 1128, 1132, 1244, 1382, 1388, 1405, 1588, 1766, 1773, 2066, 2160, 2253, 2281, 2284, 2301, 2303, 2306, 2590, 3007, 3495, 3840, 4043, 4047, 4053, 4057, 4121, 4442, 4569, 4617};
@@ -494,7 +495,7 @@ void SimpleSpectrumPi0(const Bool_t isInBatchMode=false, const TString sInput=sI
     const Bool_t isInTspTrgCut = ((tsp > tspMin) && (tsp < tspMax));
     const Bool_t isInEtaTrgCut = (TMath::Abs(hTrg) < hTrgMax);
     const Bool_t isInEtTrgCut  = ((eTtrg > eTtrgMin) && (eTtrg < eTtrgMax));
-    if (isHotTrg || !isInAdcCut || !isInStrpCut || !isInProjCut || !isInProjCut || !isInEtTrgCut || !isInEtaTrgCut) continue;
+    if (isHotTrg || !isInAdcCut || !isInStrpCut || !isInProjCut || !isInTspTrgCut || !isInEtaTrgCut || !isInEtTrgCut) continue;
 
 
     // track loop
@@ -541,7 +542,7 @@ void SimpleSpectrumPi0(const Bool_t isInBatchMode=false, const TString sInput=sI
       const Double_t eTwr  = TowerArray_TwrEng[iTwr];
       const Double_t pXtwr = TowerArray_TwrPx[iTwr];
       const Double_t pYtwr = TowerArray_TwrPy[iTwr];
-      const Double_t pTtwr = TMath::Sqrt((pXtwr * pXtwr) && (pYtwr * pYtwr));
+      const Double_t pTtwr = TMath::Sqrt((pXtwr * pXtwr) + (pYtwr * pYtwr));
 
       Double_t dHtwr = hTwr - hClust;
       Double_t dFtwr = fTwr - fTrg;
@@ -560,6 +561,7 @@ void SimpleSpectrumPi0(const Bool_t isInBatchMode=false, const TString sInput=sI
       // tower cuts
       const Bool_t isNotTrg      = (twrID != trgID);
       const Bool_t isInEneCut    = (eTwr > eTwrMin);
+      const Bool_t isInPtTwrCut  = (pTtwr > pTtwrMin);
       const Bool_t isInEtaTwrCut = (TMath::Abs(hTwr) < hTwrMax);
       if (isHotTwr || !isNotTrg || !isInEneCut || !isInEtaTwrCut) continue;
 
