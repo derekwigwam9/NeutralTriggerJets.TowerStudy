@@ -25,7 +25,6 @@ static const UInt_t   NTwrMax(10000);
 static const UInt_t   NMatMax(100);
 static const UInt_t   NHotTwr(41);
 static const UInt_t   OneTriggerPerEvt(false);
-static const Double_t RecoilMax(TMath::PiOver2());
 // io parameters
 static const TString sTree("GfmtoDst_mu");
 static const TString sInDefault("/star/data01/pwg/dmawxc/JetReco_pp/FullJetTree/run9embedding/pt35.match.root");
@@ -55,6 +54,10 @@ void SimpleSpectrumHad(const Bool_t isInBatchMode=false, const TString sInput=sI
   const Double_t hTwrMax  = 0.9;
   const Double_t eTwrMin  = 0.2;
   const Double_t pTtwrMin = 0.2;
+  // delta-phi cut
+  const Double_t dFrecoil(TMath::PiOver2());
+  const Double_t dFcut1(TMath::Pi() - dFrecoil);
+  const Double_t dFcut2(TMath::Pi() + dFrecoil);
 
   // hot towers
   const UInt_t hotTwrs[NHotTwr] = {1, 35, 141, 187, 224, 341, 424, 594, 814, 899, 900, 1046, 1128, 1132, 1244, 1382, 1388, 1405, 1588, 1766, 1773, 2066, 2160, 2253, 2281, 2284, 2301, 2303, 2306, 2590, 3007, 3495, 3840, 4043, 4047, 4053, 4057, 4121, 4442, 4569, 4617};
@@ -520,6 +523,10 @@ void SimpleSpectrumHad(const Bool_t isInBatchMode=false, const TString sInput=sI
           const Bool_t isInPtTrkCut    = (pTtrk > pTtrkMin);
           if (!isInFitTrkCut || !isInRatioTrkCut || !isInDcaTrkCut || !isInEtaTrkCut || !isInPtTrkCut) continue;
 
+          // recoil condition
+          const Bool_t isRecoil = ((dFtrk > dFcut1) && (dFtrk < dFcut2));
+          if (!isRecoil) continue;
+
           // fill track histograms
           hTrkEta -> Fill(hTrk);
           hTrkPhi -> Fill(fTrk);
@@ -559,6 +566,10 @@ void SimpleSpectrumHad(const Bool_t isInBatchMode=false, const TString sInput=sI
           const Bool_t isInPtTwrCut  = (pTtwr > pTtwrMin);
           const Bool_t isInEtaTwrCut = (TMath::Abs(hTwr) < hTwrMax);
           if (isHotTwr || !isInEneCut || !isInEtaTwrCut) continue;
+
+          // recoil condition
+          const Bool_t isRecoil = ((dFtwr > dFcut1) && (dFtwr < dFcut2));
+          if (!isRecoil) continue;
 
           // fill tower histograms
           hTwrEta -> Fill(hTwr);
